@@ -3,6 +3,8 @@ import random
 
 from api_mailhog.apis.mailhog_api import MailhogApi
 from dm_api_account.apis.account_api import AccountApi
+from restclient.configuration import Configuration as MailhogConfiguration
+from restclient.configuration import Configuration as DmApiConfiguration
 import structlog
 
 structlog.configure(
@@ -18,8 +20,12 @@ structlog.configure(
 
 def test_put_v1_account_token():
     # Подготовка тестовых данных
-    account_api = AccountApi(host='http://5.63.153.31:5051')
-    mailhog_api = MailhogApi(host='http://5.63.153.31:5025')
+    mailhog_configuration = MailhogConfiguration(host='http://5.63.153.31:5025')
+    dm_api_configuration = DmApiConfiguration(host='http://5.63.153.31:5051', disable_log=False)
+
+    account_api = AccountApi(configuration=dm_api_configuration)
+    mailhog_api = MailhogApi(configuration=mailhog_configuration)
+
     login = f'ek-n-palvova-{random.random()}'
     password = '123456789'
     email = f'{login}@mail.ru'
