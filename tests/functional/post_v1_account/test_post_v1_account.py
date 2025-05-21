@@ -1,8 +1,19 @@
 from json import loads
 import random
 
-from dm_api_account.apis.account_api import AccountApi
 from api_mailhog.apis.mailhog_api import MailhogApi
+from dm_api_account.apis.account_api import AccountApi
+import structlog
+
+structlog.configure(
+    processors=[
+        structlog.processors.JSONRenderer(
+            indent=4,
+            ensure_ascii=True,
+            # sort_keys=True
+        )
+    ]
+)
 
 
 def test_post_v1_account():
@@ -19,14 +30,12 @@ def test_post_v1_account():
     }
     # Регистрация пользователя
     response = account_api.post_v1_account(json_data=json_data)
-    print(response.status_code)
-    print(response.text)
+
     assert response.status_code == 201, f'Пользователь не был создан {response.json()}'
 
     # Получить письма из почтового сервера
     response = mailhog_api.get_api_v2_messages()
-    print(response.status_code)
-    print(response.text)
+
     assert response.status_code == 200, 'Письма не были получены'
 
     # Получить активационный токен
