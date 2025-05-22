@@ -1,6 +1,7 @@
-from json import loads
 import random
+from json import loads
 
+from helpers.account_helper import AccountHelper
 from restclient.configuration import Configuration as DmApiConfiguration
 from restclient.configuration import Configuration as MailhogConfiguration
 import structlog
@@ -27,100 +28,30 @@ def test_put_v1_account_email():
     account = DMApiAccount(configuration=dm_api_configuration)
     mailhog = MailHogApi(configuration=mailhog_configuration)
 
+    account_helper = AccountHelper(dm_account_api=account, mailhog=mailhog)
+
     login = f'ek-n-palvova-{random.random()}'
     password = '123456789'
     email = f'{login}@mail.ru'
-    json_data = {
+    new_email = f'new-{login}@mail.ru'
+
+    account_helper.activate_new_user(login=login, password=password, email=email)
+    account_helper.user_login(login=login, password=password)
+
+    new_json_data = {
         'login': login,
-        'email': email,
+        'email': new_email,
         'password': password,
     }
-    # Регистрация пользователя
-    response = account.account_api.post_v1_account(json_data=json_data)
-
-    assert response.status_code == 201, f'Пользователь не был создан {response.json()}'
-
-    # Получить письма из почтового сервера
-    response = mailhog.mailhog_api.get_api_v2_messages()
-
-    assert response.status_code == 200, 'Письма не были получены'
-
-    # Получить активационный токен
-    token = get_activation_token_by_login(login, response)
-
-    assert token is not None, f'Токен для пользователя {login} не был получен'
-
-    # Активация пользователя
-    response = account.account_api.put_v1_account_token(token=token)
-
-    assert response.status_code == 200, 'Пользователь не был активирован'
-
-    # Авторизоваться
-    json_data = {
-        'login': login,
-        'password': password,
-        'rememberMe': True,
-    }
-
-    response = account.login_api.post_v1_account_login(json_data=json_data)
-
-    assert response.status_code == 200, 'Пользователь не смог авторизоваться'
 
     # Смена почтового адреса пользователя
-    json_data = {
-        'login': login,
-        'email': f'new-{login}@mail.ru',
-        'password': password,
-
-    }
-
-    response = account.account_api.put_v1_account_email(json_data=json_data)
-
-    assert response.status_code == 200, 'Пользователь не смог сменить почтовый адрес'
+    account_helper.change_user_email(json_data=new_json_data)
 
     # Попытка авторизации с новым почтовым адресом
+    account_helper.user_login_without_activation(json_data=new_json_data)
 
-    response = account.login_api.post_v1_account_login(json_data=json_data)
+    # Получение нового активационного токена и активация пользователя
+    account_helper.activate_user_email(login=login)
 
-    assert response.status_code == 403, 'Пользователь смог авторизоваться без активации токена'
-
-    # Получить письма из почтового сервера
-    response = mailhog.mailhog_api.get_api_v2_messages()
-
-    assert response.status_code == 200, 'Письма не были получены'
-
-    # Получить активационный токен
-    new_token = get_activation_token_by_login(login, response)
-
-    assert token is not None, f'Токен для пользователя {login} не был получен'
-
-    # Активация пользователя
-    response = account.account_api.put_v1_account_token(token=new_token)
-
-    assert response.status_code == 200, 'Пользователь не был активирован'
-
-    # Авторизоваться
-    json_data = {
-        'login': login,
-        'password': password,
-        'rememberMe': True,
-    }
-
-    response = account.login_api.post_v1_account_login(json_data=json_data)
-
-    assert response.status_code == 200, 'Пользователь не смог авторизоваться'
-
-
-def get_activation_token_by_login(
-        login,
-        response
-):
-    token = None
-    for item in response.json()['items']:
-        user_data = loads(
-            item['Content']['Body']
-        )
-        user_login = user_data['Login']
-        if user_login == login:
-            token = user_data['ConfirmationLinkUrl'].split('/')[-1]
-    return token
+    # Авторизация с новой почтой
+    account_helper.user_login(login=login, password=password)
