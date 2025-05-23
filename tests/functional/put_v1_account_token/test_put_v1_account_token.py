@@ -33,4 +33,5 @@ def test_put_v1_account_token():
     password = '123456789'
     email = f'{login}@mail.ru'
 
-    account_helper.activate_new_user(login=login, password=password, email=email)
+    account_helper.register_new_user(login=login, password=password, email=email)
+    account_helper.activate_user_email(login=login)

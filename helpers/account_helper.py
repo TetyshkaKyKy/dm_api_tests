@@ -13,22 +13,6 @@ class AccountHelper:
         self.dm_account_api = dm_account_api
         self.mailhog = mailhog
 
-    def activate_new_user(
-            self,
-            login: str,
-            password: str,
-            email: str
-    ):
-        json_data = {
-            'login': login,
-            'email': email,
-            'password': password,
-        }
-        response = self.dm_account_api.account_api.post_v1_account(json_data=json_data)
-        assert response.status_code == 201, f"Пользователь не был создан {response.json()}"
-
-        self.activate_user_email(login=login)
-
     def register_new_user(
             self,
             login: str,
@@ -43,11 +27,7 @@ class AccountHelper:
         response = self.dm_account_api.account_api.post_v1_account(json_data=json_data)
         assert response.status_code == 201, f"Пользователь не был создан {response.json()}"
 
-        messages = self.mailhog.mailhog_api.get_api_v2_messages()
-        assert messages.status_code == 200, "Письма не были получены"
-
-        token = self.get_activation_token_by_login(login=login, response=messages)
-        assert token is not None, f"Токен для пользователя {login} не был получен"
+        self.get_user_token(login=login)
 
     def user_login(
             self,
@@ -62,7 +42,7 @@ class AccountHelper:
         }
 
         response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
-        assert response.status_code == 200, 'Пользователь не смог авторизоваться'
+        return response
 
     def change_user_email(
             self,
@@ -72,14 +52,7 @@ class AccountHelper:
         response = self.dm_account_api.account_api.put_v1_account_email(json_data)
         assert response.status_code == 200, 'Пользователь не смог сменить почтовый адрес'
 
-    def user_login_without_activation(
-            self,
-            json_data: dict
-    ):
-        response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
-        assert response.status_code == 403, 'Пользователь смог авторизоваться без активации токена'
-
-    def activate_user_email(
+    def get_user_token(
             self,
             login: str,
     ):
@@ -88,7 +61,13 @@ class AccountHelper:
 
         token = self.get_activation_token_by_login(login, messages)
         assert token is not None, f'Токен для пользователя {login} не был получен'
+        return token
 
+    def activate_user_email(
+            self,
+            login
+    ):
+        token = self.get_user_token(login=login)
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         assert response.status_code == 200, 'Пользователь не был активирован'
 

@@ -35,7 +35,8 @@ def test_put_v1_account_email():
     email = f'{login}@mail.ru'
     new_email = f'new-{login}@mail.ru'
 
-    account_helper.activate_new_user(login=login, password=password, email=email)
+    account_helper.register_new_user(login=login, password=password, email=email)
+    account_helper.activate_user_email(login=login)
     account_helper.user_login(login=login, password=password)
 
     new_json_data = {
@@ -48,9 +49,11 @@ def test_put_v1_account_email():
     account_helper.change_user_email(json_data=new_json_data)
 
     # Попытка авторизации с новым почтовым адресом
-    account_helper.user_login_without_activation(json_data=new_json_data)
+    user_login_without_activation = account_helper.user_login(login=login, password=password)
+    assert user_login_without_activation.status_code == 403, 'Пользователь смог авторизоваться без активации токена'
 
     # Получение нового активационного токена и активация пользователя
+    account_helper.get_user_token(login=login)
     account_helper.activate_user_email(login=login)
 
     # Авторизация с новой почтой
