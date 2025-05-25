@@ -77,10 +77,18 @@ class AccountHelper:
 
     def change_user_email(
             self,
-            json_data: dict,
+            login: str,
+            email: str,
+            password: str,
     ):
 
-        response = self.dm_account_api.account_api.put_v1_account_email(json_data)
+        json_data = {
+            'login': login,
+            'email': email,
+            'password': password,
+        }
+
+        response = self.dm_account_api.account_api.put_v1_account_email(json_data=json_data)
         assert response.status_code == 200, 'Пользователь не смог сменить почтовый адрес'
 
     def get_user_token(

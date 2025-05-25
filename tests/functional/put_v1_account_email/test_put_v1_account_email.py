@@ -39,14 +39,8 @@ def test_put_v1_account_email():
     account_helper.activate_user_email(login=login)
     account_helper.user_login(login=login, password=password)
 
-    new_json_data = {
-        'login': login,
-        'email': new_email,
-        'password': password,
-    }
-
     # Смена почтового адреса пользователя
-    account_helper.change_user_email(json_data=new_json_data)
+    account_helper.change_user_email(login=login, password=password, email=new_email)
 
     # Попытка авторизации с новым почтовым адресом
     user_login_without_activation = account_helper.user_login(login=login, password=password)
