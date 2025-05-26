@@ -49,9 +49,7 @@ class AccountHelper:
             login: str,
             password: str
     ):
-        response = self.dm_account_api.login_api.post_v1_account_login(
-            json_data={'login': login, 'password': password}
-        )
+        response = self.user_login(login=login, password=password)
         token = {
             'x-dm-auth-token': response.headers['x-dm-auth-token']
         }
