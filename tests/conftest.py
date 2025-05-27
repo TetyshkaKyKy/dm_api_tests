@@ -47,7 +47,7 @@ def auth_account_helper(mailhog_api):
     account = DMApiAccount(configuration=dm_api_configuration)
     account_helper = AccountHelper(dm_account_api=account, mailhog=mailhog_api)
     account_helper.auth_client(
-        login='ek-n-palvova-24_05_2025-23_21_59',
+        login='ek-n-palvova-27_05_2025-12_18_00',
         password='123456789'
     )
     return account_helper
