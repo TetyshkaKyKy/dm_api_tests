@@ -23,7 +23,7 @@ structlog.configure(
 
 @pytest.fixture(scope='session')
 def mailhog_api():
-    mailhog_configuration = MailhogConfiguration(host='http://5.63.153.31:5025')
+    mailhog_configuration = MailhogConfiguration(host='http://5.63.153.31:5025', disable_log=False)
     mailhog_client = MailHogApi(configuration=mailhog_configuration)
     return mailhog_client
 
@@ -60,6 +60,8 @@ def prepare_user():
     login = f'ek-n-palvova-{data}'
     password = '123456789'
     email = f'{login}@mail.ru'
-    User = namedtuple('User', ['login', 'password', 'email'])
-    user = User(login=login, password=password, email=email)
+    new_email = f'new_{login}@mail.ru'
+    new_password = '987654321'
+    User = namedtuple('User', ['login', 'password', 'email', 'new_email', 'new_password'])
+    user = User(login=login, password=password, email=email, new_email=new_email, new_password=new_password)
     return user
