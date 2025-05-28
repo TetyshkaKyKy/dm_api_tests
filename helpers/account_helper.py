@@ -70,8 +70,10 @@ class AccountHelper:
         }
         response = self.dm_account_api.account_api.post_v1_account(json_data=json_data)
         assert response.status_code == 201, f'Пользователь не был создан {response.json()}'
-
+        start_time = time.time()
         self.get_user_token(login=login)
+        end_time = time.time()
+        assert end_time - start_time < 3, 'Время ожидания активации превышено'
 
     def user_login(
             self,
@@ -85,6 +87,7 @@ class AccountHelper:
             'rememberMe': remember_me,
         }
         response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
+        assert response.headers['x-dm-auth-token'], 'Токен для пользователя не был получен'
         return response
 
     def change_user_email(
