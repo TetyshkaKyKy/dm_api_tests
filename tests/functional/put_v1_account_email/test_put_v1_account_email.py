@@ -12,7 +12,7 @@ def test_put_v1_account_email(account_helper, prepare_user):
     account_helper.change_user_email(login=login, password=password, email=new_email)
 
     # Попытка авторизации с новым почтовым адресом
-    user_login_without_activation = account_helper.user_login(login=login, password=password)
+    user_login_without_activation = account_helper.user_login(login=login, password=password, validate_headers=False)
     assert user_login_without_activation.status_code == 403, 'Пользователь смог авторизоваться без активации токена'
 
     # Получение нового активационного токена и активация пользователя
