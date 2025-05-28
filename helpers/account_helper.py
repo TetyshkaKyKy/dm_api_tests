@@ -180,13 +180,14 @@ class AccountHelper:
             user_data = loads(
                 item['Content']['Body']
             )
-            mail_subject = item['Content']['Headers']['Subject']
-            mail_subject = ' '.join(mail_subject)
+
+            key = 'ConfirmationLinkUrl' if token_type == 'activation' else 'ConfirmationLinkUri'
 
             user_login = user_data['Login']
-            if user_login == login and token_type == 'activation' and mail_subject.endswith(f'{login}!'):
-                token = user_data['ConfirmationLinkUrl'].split('/')[-1]
-            elif user_login == login and token_type == 'reset' and mail_subject.endswith(f'{login}'):
-                token = user_data['ConfirmationLinkUri'].split('/')[-1]
+            if user_login == login:
+                try:
+                    token = user_data[key].split('/')[-1]
+                except KeyError:
+                    continue
 
-        return token
+            return token

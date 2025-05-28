@@ -20,13 +20,16 @@ class LoginApi(RestClient):
 
     def delete_v1_account_login(
             self,
+            **kwargs
     ):
         """
         Logout as current user
+        :param kwargs:
         :return:
         """
         response = self.delete(
-            path='/v1/account/login'
+            path='/v1/account/login',
+            **kwargs
         )
         return response
 
