@@ -6,6 +6,7 @@ from dm_api_account.models.user_details_envelope import UserRole, ColorSchema
 
 
 def test_get_v1_account_auth(auth_account_helper):
+    current_user = auth_account_helper.dm_account_api.account_api.get_v1_account()
     # assert response.status_code == 200, 'Не удалось получить информацию о пользователи'
     assert_that(
         current_user,
