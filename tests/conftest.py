@@ -47,7 +47,7 @@ def auth_account_helper(mailhog_api):
     account = DMApiAccount(configuration=dm_api_configuration)
     account_helper = AccountHelper(dm_account_api=account, mailhog=mailhog_api)
     account_helper.auth_client(
-        login='ek-n-palvova-27_05_2025-12_18_00',
+        login='ek-n-pavlova-29_05_2025-14_30_28',
         password='123456789'
     )
     return account_helper
@@ -57,7 +57,7 @@ def auth_account_helper(mailhog_api):
 def prepare_user():
     now = datetime.datetime.now()
     data = now.strftime('%d_%m_%Y-%H_%M_%S')
-    login = f'ek-n-palvova-{data}'
+    login = f'ek-n-pavlova-{data}'
     password = '123456789'
     email = f'{login}@mail.ru'
     new_email = f'new_{login}@mail.ru'
