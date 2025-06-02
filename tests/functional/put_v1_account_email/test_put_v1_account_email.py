@@ -1,3 +1,6 @@
+from checkers.http_checkers import check_status_code_http
+
+
 def test_put_v1_account_email(account_helper, prepare_user):
     login = prepare_user.login
     password = prepare_user.password
@@ -12,8 +15,11 @@ def test_put_v1_account_email(account_helper, prepare_user):
     account_helper.change_user_email(login=login, password=password, email=new_email)
 
     # Попытка авторизации с новым почтовым адресом
-    user_login_without_activation = account_helper.user_login(login=login, password=password, validate_headers=False)
-    assert user_login_without_activation.status_code == 403, 'Пользователь смог авторизоваться без активации токена'
+    with check_status_code_http(
+            expected_status_code=403,
+            expected_message='User is inactive. Address the technical support for more details'
+    ):
+        account_helper.user_login(login=login, password=password, validate_headers=False)
 
     # Получение нового активационного токена и активация пользователя
     account_helper.get_user_token(login=login)
