@@ -74,11 +74,11 @@ class AccountHelper:
             password=password,
         )
         response = self.dm_account_api.account_api.post_v1_account(registration=registration)
-        assert response.status_code == 201, f'Пользователь не был создан {response.json()}'
         start_time = time.time()
         self.get_user_token(login=login)
         end_time = time.time()
         assert end_time - start_time < 3, 'Время ожидания активации превышено'
+        return response
 
     def user_login(
             self,
@@ -117,7 +117,6 @@ class AccountHelper:
 
         response = self.dm_account_api.account_api.put_v1_account_email(change_email=change_email)
         return response
-        # assert response.status_code == 200, 'Пользователь не смог сменить почтовый адрес'
 
     def change_user_password(
             self,
@@ -139,7 +138,6 @@ class AccountHelper:
 
         response = self.dm_account_api.account_api.put_v1_account_password(headers=headers,
                                                                            change_password=change_password)
-        # assert response.status_code == 200, 'Пользователь не смог сменить пароль'
         return response
 
     def reset_user_password(
@@ -153,7 +151,6 @@ class AccountHelper:
         )
 
         response = self.dm_account_api.account_api.post_v1_account_password(reset_password=reset_password)
-        # assert response.status_code == 200, 'Не удалось сбросить пароль'
         return response
 
     def get_user_token(
@@ -178,13 +175,13 @@ class AccountHelper:
             self
     ):
         response = self.dm_account_api.login_api.delete_v1_account_login()
-        assert response.status_code == 204, 'Пользователь не был разлогинен'
+        return response
 
     def delete_account_login_all(
             self
     ):
         response = self.dm_account_api.login_api.delete_v1_account_login_all()
-        assert response.status_code == 204, 'Пользователь не был разлогинен на всех устройствах'
+        return response
 
     @retry(stop_max_attempt_number=5, retry_on_result=retry_if_result_none, wait_fixed=1000)
     def get_activation_token_by_login(
