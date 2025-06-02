@@ -1,9 +1,10 @@
 from datetime import datetime
 
-from checkers.http_checkers import check_status_code_http
-from dm_api_account.models.user_details_envelope import ColorSchema
-from dm_api_account.models.user_details_envelope import UserRole
 from hamcrest import assert_that, all_of, has_property, starts_with, instance_of, has_properties, equal_to, has_items
+
+from dm_api_account.models.user_details_envelope import UserRole, ColorSchema
+
+from checkers.http_checkers import check_status_code_http
 
 
 def test_get_v1_account_auth(auth_account_helper):

@@ -99,6 +99,7 @@ class AccountHelper:
         )
         if validate_headers:
             assert response.headers['x-dm-auth-token'], 'Токен для пользователя не был получен'
+            assert response.status_code == 200, "Пользователь не смог авторизоваться"
         return response
 
     def change_user_email(
