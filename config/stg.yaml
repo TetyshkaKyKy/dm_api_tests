@@ -3,5 +3,5 @@ service:
   mailhog: 'http://5.63.153.31:5025'
 
 user:
-  login: 'ek-n-pavlova-29_05_2025-14_30_28'
+  login: 'ek-n-pavlova'
   password: '123456789'
