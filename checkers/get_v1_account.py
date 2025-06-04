@@ -7,12 +7,12 @@ from dm_api_account.models.user_details_envelope import UserRole, ColorSchema
 
 class GetV1Account:
     @classmethod
-    def check_response_values(cls, response):
+    def check_response_values(cls, response, login: str = ''):
         assert_that(
             response,
             has_property(
                 'resource', all_of(
-                    has_property('login', starts_with('ek-n-pavlova')),
+                    has_property('login', starts_with(login)),
                     has_property('registration', instance_of(datetime)),
                     has_properties(
                         {

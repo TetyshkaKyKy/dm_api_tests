@@ -4,7 +4,8 @@ from checkers.http_checkers import check_status_code_http
 
 def test_get_v1_account_auth(auth_account_helper):
     current_user = auth_account_helper.dm_account_api.account_api.get_v1_account()
-    GetV1Account.check_response_values(current_user)
+    login = current_user.resource.login
+    GetV1Account.check_response_values(current_user, login)
 
 
 def test_get_v1_account_no_auth(account_helper):
