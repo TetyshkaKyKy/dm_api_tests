@@ -5,3 +5,7 @@ service:
 user:
   login: 'ek-n-pavlova'
   password: '123456789'
+
+telegram:
+  chat_id: '-1001723208642'
+  token: '7740527697:AAHx9rQa3M3J3nhotKF6Gvqys_F3Edd0Akk'
