@@ -34,7 +34,7 @@ jobs:
           pytest ./tests --alluredir=allure-results --disable-warnings
         continue-on-error: true
       - name: Find coverage report
-        run: find $GITHUB_WORKSPACE -name "swagger-coverage-report*.html"
+        run:  ls -la
       - name: Run Coverage
         if: ${{ always() }}
         run: |
