@@ -34,7 +34,7 @@ jobs:
           pytest ./tests --alluredir=allure-results --disable-warnings
         continue-on-error: true
       - name: Find coverage report
-        run:  ls -la ./tests
+        run:  ls -la
       - name: Run Coverage
         if: ${{ always() }}
         run: |
