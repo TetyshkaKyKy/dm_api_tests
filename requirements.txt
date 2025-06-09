@@ -30,7 +30,7 @@ retrying==1.3.4
 rootpath==0.1.0
 six==1.17.0
 structlog==25.3.0
-swagger-coverage @ https://github.com/ValeriyMenshikov/swagger-coverage-py/archive/refs/heads/master.zip
+swagger-coverage @ https://github.com/TetyshkaKyKy/swagger-coverage-py/archive/refs/heads/master.zip
 telebot==0.0.5
 toml==0.10.2
 tomli==2.2.1
