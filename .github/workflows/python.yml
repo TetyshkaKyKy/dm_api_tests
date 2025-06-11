@@ -31,7 +31,7 @@ jobs:
       - name: Run tests
         run: |
           export JAVA_HOME=$JAVA_HOME
-          DEBUG_MODE=true pytest ./tests --alluredir=allure-results --disable-warnings
+          DEBUG_MODE=true pytest ./tests --alluredir=allure-results --disable-warnings -s -vv
         continue-on-error: true
       - name: Find coverage report
         run:  ls -la
