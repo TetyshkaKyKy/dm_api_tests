@@ -23,7 +23,7 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
       - name: Set JAVA_HOME environment variable
-        run: echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))" >> $GITHUB_ENV
+        run: echo 'JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))' >> $GITHUB_ENV
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
