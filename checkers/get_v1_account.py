@@ -3,7 +3,7 @@ from datetime import datetime
 import allure
 from hamcrest import assert_that, all_of, has_property, starts_with, instance_of, has_properties, equal_to, has_items
 
-from dm_api_account.models.user_details_envelope import UserRole, ColorSchema
+from clients.http.dm_api_account.models.user_details_envelope import UserRole, ColorSchema
 
 
 class GetV1Account:
